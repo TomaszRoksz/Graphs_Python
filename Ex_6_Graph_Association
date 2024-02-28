@@ -1,0 +1,54 @@
+def listInput():
+    lines = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+        lines.append(line)
+    return lines
+
+def createList():
+    matrixLines=listInput()
+    matrix=matrixLines
+      
+    for i in range(len(matrixLines)):
+        if not matrixLines[i]: 
+            association=matrixLines[i+1:]
+            for j in range(len(association)):
+                association[j]=list(map(int, association[j].split()))
+            matrix=matrix[:i]
+            break
+            
+        matrix[i]=list(map(int, matrixLines[i].split()))
+        matrix[i].pop(0)
+                          
+    return matrix, association
+
+
+def graphAssociation(graph, association):
+    
+    for i in range(len(association)):
+        if association[i][1] not in graph[association[i][0]-1]:
+            return False
+
+    stack=[]
+    for row in association:
+        for value in row:
+            if value in stack:
+                return False
+            else:
+                stack.append(value)
+                
+    return True
+            
+                
+    
+    
+
+graph, association = createList()
+if graphAssociation(graph, association):
+    print("Jest to skojarzenie")
+else: print("Nie jest to skojarzenie")
+
+        
