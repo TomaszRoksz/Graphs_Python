@@ -1,0 +1,115 @@
+def matrix_input():
+    y=input()
+    y = list(map(int, y.split()))
+    matrix=[]
+
+    matrix.append(y)
+
+    for i in range(len(y)-1):
+        a=input()
+        a=list(map(int, a.split()))
+        matrix.append(a)
+    return matrix
+
+def matrix_to_list(matrix):
+    vertices=len(matrix)
+    graph = [[] for _ in range(vertices)]
+    
+    for i in range(vertices):
+        for j in range(vertices):
+            if matrix[i][j]>0:
+                graph[i].append(j+1)
+                
+    return graph
+    
+
+def is_graph_connected(matrix):
+    visited=[False]*len(matrix)
+    visited[0]=True
+    stack=[0]
+    current=0
+    
+      
+    while stack:
+        for i in range(len(matrix)):
+            
+            if matrix[current][i]!=0 and not visited[i]:
+                current=i
+                stack.append(i)
+                visited[i]=True
+                if all(visited): return True
+                break
+                
+            elif i==len(matrix)-1:
+                stack.pop()
+                if not stack: return False
+                current=stack[-1]
+    return False
+
+def is_hamilton_graph(graph):
+    vertices=len(graph)
+    stack=[1]
+    removed=-1
+    
+    for i in range(vertices):
+        if len(matrix[i])==1:
+            stack=[i+1]
+            break
+    
+    while stack:
+        condition=True
+        
+        for vertice in graph[stack[-1]-1]:  
+                    
+            if vertice not in stack:
+                condition=False
+                stack.append(vertice)
+                removed=-1
+                
+                if len(stack)==vertices:
+                    if stack[0] not in graph[stack[-1]-1]:
+                        printStack(stack, False)
+                        return False, True
+                    elif stack[0] in graph[stack[-1-1]]:
+                        printStack(stack, True)
+                        return True, False
+                
+                break          
+                                
+        if condition==True:
+            return False, False           
+            
+    return False, False
+        
+def printStack(stack, hamilton):
+    string=""
+    for el in stack:
+        string+=str(el)+" "
+        
+    if hamilton==True:
+        print("Cykl Hamiltona: ",string)
+    else: print("Ścieżka Hamiltona: ",string)
+    
+            
+                
+        
+        
+
+matrix=matrix_input()
+graph=matrix_to_list(matrix)
+
+if is_graph_connected(matrix):
+    hamilton, half_hamilton=is_hamilton_graph(graph)
+    
+    if hamilton:
+        print("Graf jest hamiltonowski")
+        
+    elif half_hamilton:
+        print("Graf jest półhamiltonowski")
+        
+    else: print("Graf nie jest hamiltonowski")
+        
+else: print("Graf jest niespójny")
+
+
+
